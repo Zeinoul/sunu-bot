@@ -10,17 +10,16 @@ import os
 
 # ========== CONFIG ==========
 FORMAT_FACTURE = "pdf"  # Mets "pdf" ou "word" ou "excel" - un seul à la fois
-CHEMIN_CLE_JSON = r"C:\Users\unchk\OneDrive\Desktop\sunu-com.json\sunu-com-firebase-adminsdk-fbsvc-56c701396c.json"
 URL_BASE_DONNEES = "https://sunu-com-default-rtdb.firebaseio.com/"
 # ============================
-
-# DEBUG - Vérif que le fichier existe
-print("Je cherche ici :", CHEMIN_CLE_JSON)
-print("Fichier existe ?", os.path.exists(CHEMIN_CLE_JSON))
-
-if not os.path.exists(CHEMIN_CLE_JSON):
-    print("❌ STOP : Le fichier JSON n'existe pas à ce chemin")
+# 1. CONNECTE FIREBASE - VERSION RENDER
+firebase_json = os.environ.get('FIREBASE_KEY_JSON')
+if not firebase_json:
+    print("❌ STOP : Variable FIREBASE_KEY_JSON manquante sur Render")
     exit()
+
+cred = credentials.Certificate(json.loads(firebase_json))
+firebase_admin.initialize_app(cred, {'databaseURL': URL_BASE_DONNEES})
 
 # 1. CONNECTE FIREBASE
 cred = credentials.Certificate(CHEMIN_CLE_JSON)
